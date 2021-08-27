@@ -1,0 +1,92 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Graph{
+    unordered_map<int,vector<int>> g;
+public:
+    void addEdge(int x,int y){
+        g[x].push_back(y);
+        g[y].push_back(x);
+    }
+
+    void printAdjList(){
+        for(pair<int,vector<int>> p:g){
+            cout<<p.first<<" : ";
+            for(int t:p.second){
+                cout<<t<<" ";
+            }
+            cout<<"\n";
+        }
+    }
+
+    void printBfs(){
+        //visited signifies that an element is or has been in the queue or not
+        unordered_map<int,bool> visited;
+        for(pair<int,vector<int>> p:g){
+            visited[p.first]=false;
+        }
+        cout<<"The BFS is :";
+        for(pair<int,bool> src:visited){
+            if(!visited[src.first]){
+                queue<int> q;
+                q.push(src.first);
+                visited[src.first]=true;
+                while(!q.empty()){
+                    int currNode=q.front();
+                    q.pop();
+                    //an element in visited will be true if the node has been inserted in the queue
+                    cout<<currNode<<" ";
+                    for(int selNode:g[currNode]){
+                        if(!visited[selNode]){
+                            q.push(selNode);
+                            visited[selNode]=true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void dfsUtil(unordered_map<int,bool> &visited,int currNode){
+        if(visited[currNode]){
+            return;
+        }
+        cout<<currNode<<" ";
+        visited[currNode]=true;
+        for(int selNode:g[currNode]){
+            dfsUtil(visited,selNode);
+        }
+    }
+
+    void printDFS(){
+        cout<<"The DFS is : ";
+        unordered_map<int,bool> visited;
+        for(pair<int,vector<int>> p:g){
+            visited[p.first]=false;
+        }
+        for(pair<int,vector<int>> p:g){
+            if(!visited[p.first]){
+                dfsUtil(visited,p.first);
+            }
+        }
+    }
+};
+
+int main(){
+    Graph g;
+    g.addEdge(0,1);
+    g.addEdge(0,3);
+    g.addEdge(1,2);
+    g.addEdge(2,3);
+    g.addEdge(2,0);
+    g.addEdge(3,4);
+    g.addEdge(4,5);
+    g.addEdge(8,9);
+    g.printAdjList();
+    g.printDFS();
+    cout<<"\n";
+    g.printBfs();
+    return 0;
+}
+
+
